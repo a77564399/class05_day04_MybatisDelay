@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.day05.dao.IAccountDao">
+    <resultMap id="AccountUserMap" type="AccountUser">
+        <id property="id" column="id"></id>
+        <result property="uid" column="uid"></result>
+        <result property="money" column="money"></result>
+
+<!--        一对一映射关系：配置封装user内容-->
+<!--        select属性指定的内容：查询用户的唯一标识-->
+<!--        column属性执行的内容：用户根据id进行查询时，需要参数的值-->
+
+        <association property="user" column="uid" javaType="user" select="com.day05.dao.IUserDao.findUserById"></association>
+    </resultMap>
+
+
+    <resultMap id="UserAccountMap" type="UserAccount">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="birthday" column="birthday"></result>
+        <result property="sex" column="sex"></result>
+        <result property="address" column="address"></result>
+        <collection property="accounts" ofType="Account">
+            <id property="id" column="id"></id>
+            <result property="uid" column="uid"></result>
+            <result property="money" column="money"></result>
+        </collection>
+    </resultMap>
+
+    <select id="findAll" resultType="Account">
+        select * from account
+    </select>
+
+    <select id="findAccountUser" resultMap="AccountUserMap">
+        SELECT * from account
+    </select>
+
+
+    <select id="findUserAccount" resultMap="UserAccountMap">
+        SELECT * FROM USER u LEFT JOIN account a  ON u.id=a.uid
+    </select>
+
+
+
+</mapper>

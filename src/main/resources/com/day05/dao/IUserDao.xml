@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.day05.dao.IUserDao">
+    <select id="findAll" resultType="User">
+        select * from user where 1=1
+        <if test="username!=null">
+            and username = username
+        </if>
+    </select>
+
+    <select id="findUserById" parameterType="int" resultType="user" useCache="true">
+        select * from user where id=#{id}
+    </select>
+
+    <select id="findByIds" parameterType="int" resultType="User">
+        select * from user
+        <where>
+            <!-- 注意此处的拼接条件使用and-->
+            <if test="list!=null and list.size()>0">
+                <foreach collection="list" open="and id in (" close=")" separator="," item="uid">
+                    <!--此处uid与item保持一致-->
+                     #{uid}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+</mapper>
